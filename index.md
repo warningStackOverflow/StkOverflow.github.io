@@ -14,3 +14,4 @@
 ## [Machine Learning & Deep Learning](/ml.md)
 ## [Reinforcement Learning](/rl.md)
 ## [Golang](/go.md)
+## [Quantitative Finance](/quant.md)
