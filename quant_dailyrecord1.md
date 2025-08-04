@@ -31,7 +31,23 @@
 常见的处理方式是对于vol变化为vol/sharefloat，即计算成交量/流通股本的比率，换手率；同理对于amt有类似变化。
 2. 由于预测的y为10min后的vwap的收益率，在金融中收益率一般是一个0均值的随机变量，有点类似正态分布，但是存在厚尾和尖峰。
 因此在计算因子x时，我们希望因子x不能有离群点，或者说尽可能让x的分布接近y，常见处理有x**0.5, log(1+x), tanh(x)等。
+关于成交量的有关知识可以[参考](https://xueqiu.com/1015812066/224221944)
 ### 真东西
-1. 石川的因子投资讲的没问题，但是做的是日频，大家都卷，
+1. 石川的因子投资讲的没问题，但是做的是日频，大家都卷，可以做分钟频的。
 2. 散户需要剑走偏锋，小体量灵活，去北交所。
 3. 做期货，但是不要上杠杆。
+4. ![img.png](Granville8trade.png)
+
+## 0723 & 0724 
+### 提交/生成因子的库
+因子提交使用的库没有readme文件，需要自己看一下怎么使用，可以参考逐笔成交的库 https://github.higgsasset.com/Shannon/shannon_innovation：
+在此间出现问题：在vscode（pycharm可能也有）中，当前目录下的a.py文件需要调用../../pack/b.py文件时，
+```
+from pack.b import *
+```
+[参考](https://blog.csdn.net/weixin_39278265/article/details/119661991) <br>
+报错ModuleNotFoundError: No module named 'pack'。解决方案是添加当前目录到sys.path中。<br>
+
+## 0725
+### 因子挖掘
+使用vol/sharefloat和amt/sharefloat的方式来处理成交量和成交额。<br>
