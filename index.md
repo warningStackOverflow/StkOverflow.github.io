@@ -8,7 +8,7 @@
 ### [2025 MAR Week3](./daily2025/20250303.md)
 ### [2025 MAR Week4](./daily2025/20250304.md)
 ### [2025 APR Week1-2](./daily2025/20250401.md)
-
+### [2025 APR ~ JUL](./didi/didi_daily.md)
 ## 具体技术分类总结
 ### [Searched-based Route Planning Algorithm](./rpa/rpa.md)
 ### [Machine Learning & Deep Learning](./ml/ml.md)

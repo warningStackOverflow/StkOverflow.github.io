@@ -38,6 +38,24 @@ ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.29' not found (required
 ```
 之前在cpu节点进行debug时不报这个错，
 检查了cpu节点的libstdc++.so.6，其中有GLIBCXX_3.4.29版本，因此不报错；最后直接重新下载了一个kiwisolver覆盖了anaconda的kiwisolver，解决了问题。
-### RLgen的多卡训练加速问题
+### RLgen的多卡训练加速问题（未解决，直接用单卡，并且降低自己模型的复杂程度）
 在单张RTX3090上训练RLgen，训练速度不快，一轮差不多8-11s，这样的话完整一轮下来需要20天，这是不可行的。需要进行加速优化。
 使用的stable-baselines3库不支持多卡训练，他们的理由是RL任务都很简单，[不需要多卡](https://blog.csdn.net/javastart/article/details/130531185)，需要自己实现多卡训练。
+
+## 2025/08/07-2025/08/08
+### RLgen的结果评估
+昨天提交的slurm任务，今天跑完了，查看结果总结如下：
+模型各项指标上来看，收敛了。如果选用因子池在20，差不多1w轮左右，iteration20+会收敛。
+从ic和rank ic看，应该是有地方计算错误，手动计算出来的ic rank ic和模型输出不一致，需要排查。<br>
+发现rlgen计算ic的方式是计算每个股票的ic然后取平均，没有计算所有数据的ic。具体地:
+```
+# 1. rlgen对于 n_mins* n_stock 尺寸的因子tensor，先按n_mins进行归一化(normalize_by_day),每一min的数据服从U(0,1)
+ic_rlgen = test_calculator.calc_single_IC_ret(parsed_expr)
+         = test_calculator._calc_IC(normalize_by_day(alpha_tensor) , target_tensor)
+# 2. 对每个股票计算person相关系数，然后取平均，得到最终的ic。因此算是by_stock地计算
+    def _calc_IC(self, value1: Tensor, value2: Tensor) -> float:
+        return batch_pearsonr(value1, value2).mean().item()
+```
+这种计算方式会导致对ic计算不准确，我希望获得所有股票的全日期的ic，需要在calculator和env中修改一下计算方式。
+具体地，要改pool类里的 _calc_ic -> calculator.calc_single_IC_ret ;calc_mutual_IC -> _calc_IC
+

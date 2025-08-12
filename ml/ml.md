@@ -7,14 +7,14 @@
 ### 4. 其他技巧，如学习率调整，批归一化，Dropout，数据增强，Buffer等
 ### 5. 评价指标，如准确率，精确率，召回率，F1，AUC等
 
-## [传统监督学习上](./ml_supervised_1.md.md)
+## [传统监督学习上](./ml_supervised_1.md)
 ### 1. 感知机
 ### 2. k近邻
 ### 3. 朴素贝叶斯
 ### 4. 决策树
 ### 5. LOgiistic回归
 
-## [传统监督学习下](./ml_supervised_2.md.md)
+## [传统监督学习下](./ml_supervised_2.md)
 ### 6. 提升方法
 ### 7. SVM
 ### 8. EM算法
