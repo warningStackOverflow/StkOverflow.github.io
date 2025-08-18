@@ -44,12 +44,18 @@
 * $L_{smooth}(Y,f(X)) = \frac{1}{N} \sum_{i} \begin{cases} 0.5(y_i-f(x_i))^2 & |y_i-f(x_i)| < 1 \\ |y_i-f(x_i)| - 0.5 & |y_i-f(x_i)| \geq 1 \end{cases}$
 * smoothL1本质上是小误差用MSE保证模型光滑稳定；大误差用MAE，降低outlier的影响，这个1是一个超参数可调。
 
-### 2.6 损失函数和风险函数/期望损失的关系，监督学习的目标
+### 2.6 指数损失函数
+指数损失函数：$L(Y,f(X)) = \exp(-Yf(X))$ <br>
+指数损失函数是Adaboost中用到的损失函数，模型预测准确时小于1；模型预测错误时大于1。它作为一个损失函数，具有**加权的性质**，即对错误分类的样本给予更大的惩罚。 <br>
+指数损失函数的梯度为：$\nabla L(Y,f(X)) = -Y \exp(-Yf(X))$，因此在梯度下降中更新参数时，可以直接乘以学习率。 <br>
+关于adaboost，参见[这里](ml_supervised_2.md#611-adaboost1997年的经典算法) <br>
+
+### 2.7 损失函数和风险函数/期望损失的关系，监督学习的目标
 损失函数Loss Function：$L(Y,f(X))$，**风险函数Risk Function又名期望损失Expected Loss**：$E[L(Y,f(X))]$ 在监督学习时我们希望风险函数最小，但是X和Y的联合分布是未知的，所以只能用有限的训练集样本估计风险函数，即经验风险最小化。 <br>
 监督学习的目标是**经验风险最小化：$R_{emp}(f) = \frac{1}{N} \sum_{i=1}^{N} L(y_i,f(x_i))$，其中L为损失函数，N为样本数。 <br>**
 经验风险函数$R_emp(f)$和期望风险函数$R_exp(f)$的关系:当N趋于无穷时，$R_{emp}(f) \rightarrow R_{exp}(f)$，即经验风险最小化等价于期望风险最小化，很柏拉图。 <br>
 
-### 2.7 梯度下降方法，包括批量梯度下降，随机梯度下降，小批量梯度下降
+### 2.8 梯度下降方法，包括批量梯度下降，随机梯度下降，小批量梯度下降
 三种方法的不同在于每次更新参数用的样本选择不同。 对于一个损失函数$L(\theta)$，梯度下降的更新公式为：$\theta = \theta - \eta \nabla L(\theta)$，其中$\eta$为学习率。 $\theta$为模型参数 <br>
 **批量梯度下降Batch Gradient Descent**：每次更新参数时，用所有样本计算梯度，即$\nabla L(\theta) = \frac{1}{N} \sum_{i=1}^{N} \nabla L(\theta)$，计算量大，但是稳定，收敛速度慢。 <br>
 **随机梯度下降Stochastic Gradient Descent**：每次更新参数时，用一个样本计算梯度，即$\nabla L(\theta) = \nabla L(\theta)$，计算量小，但是不稳定，收敛速度快。 <br>
