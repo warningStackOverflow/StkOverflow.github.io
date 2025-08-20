@@ -29,9 +29,18 @@ adaboosting算法伪代码如下，Adaboost 模型是加法模型，学习算法
 5. 输出最终的强分类器 $H_T(x) = sign(\sum_{t=1}^{T} \alpha_t h_t(x))$ <br>
 6. 返回 $H_T(x)$ <br>
 
-* 上述步骤3.2中，t轮的弱分类器的权重$\alpha_t$的来源是t轮学到的弱分类器对权重梯度为0处的极值点，主要原因是adaboost方法的损失函数是指数损失函数，不细写了，没必要知道，可以看上面结构图里的文章。<br>
-* AdaBoost和GBDT的区别？由于adaboost的每一步的前向加法有点类似牛顿迭代，而gbdt目前主流库的实现方法是牛顿法，因此可以说，当损失函数为指数损失函数时，gbdt和adaboost是的区别就在于基学习器的不同，adaboost用的是分类决策树(桩)，而gbdt用的是回归树。所以可以认为adaboost是GBDT的特例。 <br>
-#### 6.1.2 梯度提升树 GBDT & 梯度提升机 GBM
+* 上述步骤3.2中，t轮的弱分类器的权重$\alpha_t$的来源是t轮学到的弱分类器对权重梯度为0处的极值点，主要原因是adaboost方法的损失函数是指数损失函数，为什么使用指数损失，以及得到权重的推导过程见下图。<br>
+![img.jpg](adaboost.jpg) <br>
+* AdaBoost和GBDT的区别？
+ 原理上：AdaBoost 是通过提升错分数据点的权重改善模型，Gradient Boosting 通过算梯度改善。因此相比 AdaBoost,GB可以使用更多种类的目标函数。
+ 工程上：由于adaboost的每一步的前向加法有点类似牛顿迭代，而gbdt目前主流库的实现方法是牛顿法，因此可以说，当损失函数为指数损失函数时，gbdt和adaboost是的区别就在于基学习器的不同，adaboost用的是分类决策树(桩)，而gbdt用的是回归树。所以可以认为adaboost是GBDT的特例。 <br>
+* adaboost的误差率以指数速率下降。证明过程可以参考[清华书P74](https://www.tup.com.cn/upload/books/yz/084939-01.pdf)。 <br>
+#### 6.1.2 梯度提升机 GBM & 梯度提升树 GBDT 
+梯度提升机（Gradient Boosting Machine）每个弱学习器的目标是拟合先前累加模型的损失函数的负梯度/（伪残差，pseudo-residual，当损失函数用平方差时，就是残差 $y_i- F_{t-1}(x_i)$，代表目前累加学习器和真实标签间的差值），使加上该弱学习器后的累积模型损失往负梯度的方向减少，最常用的基模型为树模型。<br>
+观察梯度提升机的定义会发现，adaboost其实是一种使用了指数损失的GBM。 GBM的详细讲解可见[这里](https://zhuanlan.zhihu.com/p/361036526) 下图为gbm定义 <br>
+![img.png](gbm.png) <br>
+下图为gbm的更新流程，（1）先计算伪残差 （2）训练弱学习器$h_t()$，目的是拟合伪残差/最小化$h_t(x)$和先前训练器的伪残差(梯度)${y'}_i$ （3）已有的弱学习器此时需要加到累计学习器上，计算步长shrinkage，选择让损失函数最小的步长（最速下降法）（4）其中v为学习率，用来限制步长，因为弱学习器不够可靠，所以每次迈小一点。<br>
+![img.png](gbm_algo.png) <br>
 
 #### 6.1.3 超级梯度提升 XGBoost
 Extreme Gradient Boosting，是Gradient Boosting的一种高效实现，主要是在损失函数上做了改进，加入了正则项，使得模型更加健壮。 <br>
