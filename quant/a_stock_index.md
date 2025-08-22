@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # STOCK EXPERIENCES FROM 2025.06 
  - A股勇闯记录，不按天记录，只记录事件和票，作为复盘和警示
 

@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # 先买，套住再研究
 ## [量化自学入门](quant_intro.md)
 ## [股票之道在于人弃我取](a_stock_index.md)

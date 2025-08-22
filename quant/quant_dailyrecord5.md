@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Week5 
 ## 2025/08/18 
 修改higgsdb，计划：1.在higgsdb中取数据时考虑后复权。 2.针对时间段内股票信息发生变动，如某天没有某只股票，则对应填充为NAN 3.更改output脚本中tensor的输出方式。<br>

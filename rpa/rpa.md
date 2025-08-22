@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # 序.0.自动驾驶系统的基本框架/决策控制算法框架/决策规划总览
 ## 0.1 业内对框架的分类
 分类一：[sequential planning、behavior-aware planning、和end-to-end planning](https://blog.csdn.net/CV_Autobot/article/details/139016301) 

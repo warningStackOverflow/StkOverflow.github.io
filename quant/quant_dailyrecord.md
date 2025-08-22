@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # JulWeek3
 ## 0714
 ### 入职，熟悉环境，装好配置，得到一个小demo：

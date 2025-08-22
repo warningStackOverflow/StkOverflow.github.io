@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # 机器学习训练框架有关内容
 ## 0 .数据预处理有关
 ## 1. 数据样本划分Train-Test-Validation，交叉验证等

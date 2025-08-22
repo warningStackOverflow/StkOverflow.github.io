@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # 动调实习第 6 周记录
 ## 本周计划
 - 继续学习[uplift](https://zhuanlan.zhihu.com/p/425898510)

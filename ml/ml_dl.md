@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # 神经网络和深度学习目录
 ## [1. 神经网络基本概念，包括前向传播，反向传播，激活函数等](/ml/ml_dl_1.md.md)
 ## [2. 循环神经网络（包括RNN，LSTM和GRU）](/ml/ml_dl_2_cnn.md.md)

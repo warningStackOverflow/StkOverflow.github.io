@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # JulWeek5
 ## 0728-0729
 ### 强化学习因子挖掘复现 autogen

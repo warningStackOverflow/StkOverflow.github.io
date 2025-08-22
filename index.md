@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 #  TAKE ACTION & STEP ENV & GET REWARD
 
 ## Replay Buffer 2025

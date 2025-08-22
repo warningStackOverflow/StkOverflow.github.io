@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # AugWeek1
 ## 2025/08/04
 1. 继续复现alphagen： <br>

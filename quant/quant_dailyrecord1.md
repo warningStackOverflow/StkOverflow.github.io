@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # JulWeek4
 ## 本周预期
 1. 找到rankic大于0.025的因子

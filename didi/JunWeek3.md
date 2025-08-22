@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # 第 10 周实习记录
 ## 6月16日
 1. 对causal forest方法进行评估：
