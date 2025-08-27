@@ -17,6 +17,7 @@ layout: default
 ### [Searched-based Route Planning Algorithm](./rpa/rpa.md)
 ### [Machine Learning & Deep Learning](./ml/ml.md)
 ### [Reinforcement Learning](./rl/rl.md)
+### [Search/Advtisement/Recommendation](./search/sar_index.md)
 ### [Golang](./go/go.md)
 ### [Quantitative Finance](./quant/quant.md)
 
