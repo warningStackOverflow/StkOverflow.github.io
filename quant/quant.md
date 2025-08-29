@@ -6,6 +6,7 @@ layout: default
 ## [量化自学入门](quant_intro.md)
 ## [股票之道在于人弃我取](a_stock_index.md)
 # 强化学习因子挖掘
+## [alpha101](https://arxiv.org/pdf/1601.00991)
 ## [Week1](quant_dailyrecord.md)
 ## [Week2](quant_dailyrecord1.md)
 ## [Week3](quant_dailyrecord2.md)
