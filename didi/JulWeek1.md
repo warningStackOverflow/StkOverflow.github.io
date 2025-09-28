@@ -7,7 +7,7 @@ layout: default
 ### er建模
 根据上周模型结果，在单个城市数据上对esmm模型进行测试，验证以er为监督信号的esmm模型和以可变学习参数cr和ecr为监督信号的esmm模型的效果。<br>
 1. 原先的带正则的loss如下：
-loss = 1/(2*a*a)*L_cr + 1/(2*b*b)*L_ecr + log(a) +log(b) <br>
+$loss = 1/(2*{a}^2)*L_cr + 1/(2*{b}^2)*L_ecr + log(a) +log(b)$ <br>
 可化为：loss = exp(-a)*L_cr + exp(-b)*L_ecr + a + b ,这种形式的正则不能保证最后两项为正数，导致损失函数不稳定。
 2. 参考[一篇论文](https://aaai.org/ojs/index.php/AAAI/article/view/7194/7048)
 将log(a)改为log(a+1)确保后两项大于0，修改后的loss为：
