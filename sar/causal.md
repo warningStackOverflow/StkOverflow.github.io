@@ -2,7 +2,7 @@
 layout: default
 ---
 
-
+### 关于因果推断可以看这个澳门城市大学的讲义 [Causal Inference Lecture Notes](https://wenzhe-huang.github.io/python-causality-handbook-zh/intro.html) <br>
 ### 学习关于多treatment的uplift模型 [此篇文章](https://zhuanlan.zhihu.com/p/13394677406)
 Meta-learner：将treatment作为特征（S-learner）、或根据不同的treatment搭建多个模型（T-learner），这个已有许多py包可以实现。<br>
 [TarNet](arxiv.org/abs/1810.00656) 提到了使用CFRNet/TarNet对多treatment进行建模，共享层表征X后，根据treatment的个数分到多头。<br>
@@ -60,23 +60,51 @@ uplift评估最大的难点在于我们并没有单个用户uplift的ground trut
 * ite 个体提升效果，对同一个对象，处理和不处理，outcome的差值，**不可观测的，一个人不能既要又要**。$ \tau_i = Y_i(T=1) - Y_i(T=0)$
 * ate 平均提升效果，收到/不收到处理的outcome的差值，是一种估计；可能存在其他混淆变量导致两个组outcome有差异，因此存在偏差 $ate = E[Y|X=1] - E[Y|X=0]$
 * att/atc 平均处理效果/平均控制效果，关注一部分对象，$ \tau_{att} = E[|Y_i(T=1) - Y_i(T=0)|T=1]$, atc同理 <br>
-* cate 条件平均处理效应，$\tau_{cate} = E[Y(1) - Y(0) | X=x]$
+* cate 条件平均处理效应，$\tau_{cate} = E[Y(1) - Y(0) | X=x]$， cate是人群中某个subgroup的平均处理效应。
 * 三组关系： $ate = E[ite] $
 
-### TARNet 
+### Correlation does not imply Causation 
+相关性不等于因果关系，相关性的主要来源如下图所示，包括Causation, Confounding, Selection Bias三种。<br>
+![img.png](cor3type.png) <br>
+1. Causation 因果：T导致Y的变化 <br>
+2. Confounding 混淆变量：存在一个变量X同时影响T和Y，导致T和Y相关, X同时和Y T 存在因果关系，但是T和Y之间没有因果关系。如夏天溺水人数和吃冰激凌人数关系，这中间的混淆变量就是气温。<br>
+3. Selection Bias 选择偏差：样本选择不当导致T和Y相关。如医院病人数据中，吸烟和寿命的关系，可能是因为病人本身就比普通人更不健康。<br> 
 
-### Dragonnet 
-#### dragonnet的核心思路
+
+### 潜在结果框架 Potential Outcome
+事实结果 vs 反事实结果（以二值因果推断为例，以及混淆变量带来的偏差 <br>
+事实结果：实施某种干预后观测到的结果 <br>
+反事实结果：除了事实结果外，个体在其他干预下可能的结果，没有真正发生 <br>
+$ ITE = Y(1) - Y(0)$ <br>
+$ ATE = E[ITE] = E[Y(1)] - E[Y(0)] $ <br>
+由于我们无法获得同一个个体的ITE,因此需要获得全体的ATE来估计个体的ITE，如果ATE如下估计：<br>
+$ ATE = E[Y|T=1] - E[Y|T=0] $， 会因为存在混淆变量导致出现偏差，这也是差分响应模型（T-learner）存在的问题：**无法处理混淆变量**。<br>
+
+
+### 表示学习在因果推断 ：TARNet, CFRNet, 
+#### Motivation 
+在混淆变量confounding的干预下treated组和control组的特征分布不一致。像T-learner这种模型对两个组分别建模时，两组分布差异过大，导致估计偏差。<br>
+因此可以将特征空间$X$映射到新的空间$ \phi (X)$ 中，使得treated组和control组的分布z在新空间中平衡： $ p(\phi(X)|T=1) \approx p(\phi(X)|T=0)$。这类似SVM的空间转换，也可以理解为一个经典的表示学习方法，因此可以用深度学习做。 <br>
+![domain_adaptive.png](domain_adaptive.png) 
+
+#### TARNet - Treatment-Agnostic Representation Network 
+TARNet的核心思路是通过深度网络学习一个潜在的表示空间$\phi(X)$，使得treated组和control组在该空间中分布更接近，从而减少混淆变量带来的偏差，可以看出它在T-learner的基础上做改进。<br>
+下图为T-learner和TARNet的对比，TARNet通过共享层学习潜在表示$\phi(X)$，然后分别通过两个结果头预测treated组和control组的outcome。<br>
+![tarnet.png](tarnet.png) <br>
+
+
+#### Dragonnet 
+##### dragonnet的核心思路
 传统的因果推断通过划分C/T组，计算得到两组间的插值进行估算 $U(x) = u_1(x) - u_0(x)$ 存在的问题是可能造成偏差。<br>
 因此做出如下改进点：（1）用深度网络寻找潜在的隐变量特征，避免出现 $u_1(x) - u_0(x)$ 之间的偏差；（2）输入不需要是所有变量。 （3）单纯训练两个结果头（如 TARNet）可能导致过度拟合处理组的模式。 加入倾向得分头并通过针对性正则化（targeted regularization） ，可以在估计ATE/ITE 时提高渐近效率<br>
-#### dragonnet的前置理论知识：Sufficiency of Propensity Score 
+##### dragonnet的前置理论知识：Sufficiency of Propensity Score 
 1. 如果ATE通过观测变量X来识别，那么ATE也可以通过倾向分P(T=1|X)来识别。用数学表述为：<br>
-如果 $ Y(0), Y(1) \perp T | X$，那么 $Y(0), Y(1) \perp T | P(T=1|X)$。<br>
+如果 $ Y(0), Y(1) \perp T | X$ ，那么 $Y(0), Y(1) \perp T | P(T=1|X)$。<br>
 2. 特征X可以分为四类 $ X = (X_c, X_t, X_y, X_e)$， 如下图所示 <br> 
 ![x_4_type.png](x_4_type.png) <br>
 (1). $X_c$：confounder,混淆变量，又影响T又影响Y的变量，也是需要**全放到模型**中的变量 <br>
 (2). $X_t$：仅影响T的变量，放到模型会导致因果估计出偏差 <br>
 (3). $X_y$：仅影响Y的变量，**对模型精度有提升** <br>
 (4). $X_e$：不影响T和Y的变量，应该剔除 <br> 
-#### dragonnet的网络结构
+##### dragonnet的网络结构
 ![dragonnet_structure.png](dragonnet_structure.png)

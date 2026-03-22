@@ -13,14 +13,20 @@ layout: default
 ### [2025 MAR Week4](./daily2025/20250304.md)
 ### [2025 APR Week1-2](./daily2025/20250401.md)
 ### [2025 APR ~ JUL](./didi/didi_daily.md)
+
+
 ## 具体技术分类总结
-### [Searched-based Route Planning Algorithm](./rpa/rpa.md)
 ### [Machine Learning & Deep Learning](./ml/ml.md)
 ### [Reinforcement Learning](./rl/rl.md)
-### [Search/Advtisement/Recommendation](./sar/sar_index.md)
+### [Search/Advisement/Recommendation](./sar/sar_index.md) 
+### [Large Language Model & AIGC](./llm/llm_index.md)
 ### [Golang](./go/go.md)
-### [Quantitative Finance](./quant/quant.md)
+### [Quantitative Finance](./quant/quant.md) 
+
 
 ## 项目论文/面试拷打
 ### [Project & Paper](/project/project.md)
 ### [Interview Questions](/interview/interview.md)
+
+
+## 笑选
