@@ -95,9 +95,225 @@
         overflow-x: auto;
       }
       pre code { background: none; padding: 0; }
+
+      /* ---- 目录 / directory nav ---- */
+      .nav-toggle {
+        position: fixed;
+        left: 50%;
+        bottom: 1.25rem;
+        transform: translateX(-50%);
+        z-index: 50;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 0.95rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        cursor: pointer;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .nav-toggle:hover {
+        transform: translateX(-50%) translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+      }
+
+      .nav-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+      }
+
+      .nav-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 70;
+        width: min(320px, 82vw);
+        padding: 1.5rem 1.25rem;
+        background: var(--bg);
+        border-left: 1px solid var(--border);
+        box-shadow: -2px 0 24px rgba(0, 0, 0, 0.18);
+        overflow-y: auto;
+        transform: translateX(100%);
+        transition: transform 0.25s ease;
+      }
+
+      body.nav-open { overflow: hidden; }
+      body.nav-open .nav-overlay { opacity: 1; visibility: visible; }
+      body.nav-open .nav-drawer { transform: translateX(0); }
+
+      .nav-drawer-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-drawer-title { font-size: 1.1rem; font-weight: 600; }
+      .nav-close {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 1.6rem;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 0.25rem;
+      }
+      .nav-close:hover { color: var(--text); }
+
+      .nav-drawer nav { display: flex; flex-direction: column; }
+      .dir-section {
+        margin: 1.1rem 0 0.35rem 0.5rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .dir-link {
+        display: block;
+        padding: 0.5rem;
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 0.96rem;
+        line-height: 1.4;
+      }
+      .dir-link:hover { background: var(--border); text-decoration: none; }
+      .dir-link.is-current { color: var(--link); font-weight: 600; }
+
+      /* ---- 上一篇 / 下一篇 pager ---- */
+      .pager {
+        position: fixed;
+        bottom: 1.25rem;
+        z-index: 50;
+        display: inline-flex;
+        align-items: center;
+        max-width: 42vw;
+        padding: 0.6rem 0.95rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.9rem;
+        white-space: nowrap;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .pager-prev { left: 1.25rem; }
+      .pager-next { right: 1.25rem; }
+      a.pager:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+        text-decoration: none;
+      }
+      .pager.is-disabled {
+        color: var(--muted);
+        opacity: 0.65;
+        box-shadow: none;
+        cursor: default;
+      }
+
+      @media print { .nav-toggle, .nav-overlay, .nav-drawer, .pager { display: none; } }
     </style>
 </head>
 <body>
+  <button class="nav-toggle" aria-label="打开目录" aria-controls="site-nav" aria-expanded="false">
+    <span aria-hidden="true">☰</span> 目录
+  </button>
+
+  <div class="nav-overlay"></div>
+
+  <aside class="nav-drawer" id="site-nav" aria-label="目录" aria-hidden="true">
+    <div class="nav-drawer-head">
+      <span class="nav-drawer-title">目录</span>
+      <button class="nav-close" aria-label="关闭目录">&times;</button>
+    </div>
+    <nav>
+      <a class="dir-link{% if page.url == '/' or page.url == '/index.html' %} is-current{% endif %}" href="{{ '/' | relative_url }}">🏠 首页</a>
+
+      <div class="dir-section">技术分类总结</div>
+      <a class="dir-link{% if page.url contains '/ml/' %} is-current{% endif %}" href="{{ '/ml/ml.html' | relative_url }}">Machine Learning &amp; Deep Learning</a>
+      <a class="dir-link{% if page.url contains '/rl/' %} is-current{% endif %}" href="{{ '/rl/rl.html' | relative_url }}">Reinforcement Learning</a>
+      <a class="dir-link{% if page.url contains '/sar/' %} is-current{% endif %}" href="{{ '/sar/sar_index.html' | relative_url }}">Search / Advertisement / Recommendation</a>
+      <a class="dir-link{% if page.url contains '/llm/' %} is-current{% endif %}" href="{{ '/llm/llm_index.html' | relative_url }}">Large Language Model &amp; AIGC</a>
+      <a class="dir-link{% if page.url contains '/go/' %} is-current{% endif %}" href="{{ '/go/go.html' | relative_url }}">Golang</a>
+      <a class="dir-link{% if page.url contains '/quant/' %} is-current{% endif %}" href="{{ '/quant/quant.html' | relative_url }}">Quantitative Finance</a>
+
+      <div class="dir-section">项目 / 面试</div>
+      <a class="dir-link{% if page.url contains '/interview/' %} is-current{% endif %}" href="{{ '/interview/interview.html' | relative_url }}">Interview Questions</a>
+    </nav>
+  </aside>
+
+  {% if page.dir != '/' %}
+    {% assign siblings = site.pages | where: "dir", page.dir | sort: "name" %}
+    {% assign prev = nil %}
+    {% assign next = nil %}
+    {% assign found = false %}
+    {% for p in siblings %}
+      {% if p.url == page.url %}
+        {% assign found = true %}
+      {% elsif found and next == nil %}
+        {% assign next = p %}
+      {% elsif found == false %}
+        {% assign prev = p %}
+      {% endif %}
+    {% endfor %}
+
+    {% if prev %}
+      <a class="pager pager-prev" href="{{ prev.url | relative_url }}"{% if prev.title %} title="{{ prev.title }}"{% endif %}>← 上一篇</a>
+    {% else %}
+      <span class="pager pager-prev is-disabled">已在开头</span>
+    {% endif %}
+
+    {% if next %}
+      <a class="pager pager-next" href="{{ next.url | relative_url }}"{% if next.title %} title="{{ next.title }}"{% endif %}>下一篇 →</a>
+    {% else %}
+      <span class="pager pager-next is-disabled">已在结尾</span>
+    {% endif %}
+  {% endif %}
+
   {{ content }}
+
+  <script>
+    (function () {
+      var body = document.body;
+      var toggle = document.querySelector('.nav-toggle');
+      var drawer = document.getElementById('site-nav');
+      var overlay = document.querySelector('.nav-overlay');
+      var closeBtn = document.querySelector('.nav-close');
+      if (!toggle || !drawer) { return; }
+
+      function openNav() {
+        body.classList.add('nav-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
+      }
+      function closeNav() {
+        body.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+      }
+
+      toggle.addEventListener('click', function () {
+        body.classList.contains('nav-open') ? closeNav() : openNav();
+      });
+      overlay.addEventListener('click', closeNav);
+      closeBtn.addEventListener('click', closeNav);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closeNav(); }
+      });
+    })();
+  </script>
 </body>
 </html>

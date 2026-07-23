@@ -18,7 +18,6 @@ layout: default
 ### [202607w2](./didi/202607w2.md)
 ### [202607w3](./didi/202607w3.md)
 
-
 ## 具体技术分类总结
 ### [Machine Learning & Deep Learning](./ml/ml.md)
 ### [Reinforcement Learning](./rl/rl.md)
