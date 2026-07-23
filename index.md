@@ -15,8 +15,8 @@ layout: default
 ### [2025 APR ~ JUL](./didi/didi_daily.md)
 
 ## Replay Buffer 2026
-### [202607w2](./didi/2020607w2.md)
-### [202607w3](./didi/2020607w3.md)
+### [202607w2](./didi/202607w2.md)
+### [202607w3](./didi/202607w3.md)
 
 
 ## 具体技术分类总结
